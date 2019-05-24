@@ -91,7 +91,7 @@
   border-collapse: collapse; /*이웃한 셀의 경계선 합침*/
   box-shadow: 20px 10px 5px black; /*경계선 그림자 (x방향, y방향, 흐림정도, 색상)*/
   
-background-color: blue; /*배경색 변경*/
+  background-color: blue; /*배경색 변경*/
   list-style: none; /*리스트 스타일 변경*/
   margin: auto; /*자손들 가운데 정렬*/
   vertical-align: center; /*수직 정렬*/
@@ -99,10 +99,8 @@ background-color: blue; /*배경색 변경*/
   display: inline; /*인라인으로 변경*/
   display: hidden; /*화면에서 감춰짐*/
   display: none; /*없는 것으로 간주됨*/
+  
   ```
-  
-  
-
 * 요소 위치 정하기
 
   ```css
@@ -110,18 +108,16 @@ background-color: blue; /*배경색 변경*/
   position: absolute; /*컨테이너의 원점이 기준*/
   position: relative; /*정상정인 위치가 기준*/
   position: fixed; /*윈도우의 원점이 기준*/
-  
+    
   #one {
       position: relative;
       left: 30px;
       top: 10px;
   }
-  
+    
   float: left; /*위치 정할 때*/
   clear: both; /*float의 흐름을 제거*/
   ```
-
-  
 
 * overflow 속성
 
