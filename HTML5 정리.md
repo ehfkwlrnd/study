@@ -150,3 +150,11 @@
         <!--min부터 max까지 step씩 디폴트는 value-->
     </form>
     ```
+    
+* meta 속성
+  
+  ```html
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> /*모바일 */
+  ```
+  
