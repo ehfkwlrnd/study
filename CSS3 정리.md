@@ -14,29 +14,13 @@
 
 * css선택자의 종류
 
-  1. 전체 선택자
-
      ``` css
-     {color: blue;}
+     {color: blue;} /*전체 선택자*/
+     p {color: blue;} /*타입 선택자*/
+     #special {color: blue;} /*아이디 선택자*/
+     .target {color: blue;} /*클래스 선택자*/
      ```
-
-  2. 타입 선택자
-
-     ```css
-     p {color: blue;}
-     ```
-
-  3. 아이디 선택자
-
-     ``` css
-     #special {color: blue;}
-     ```
-
-  4. 클래스 선택자
-
-     ``` css
-     .target {color: blue;}
-     ```
+     
 
 * 의사 클래스
 
