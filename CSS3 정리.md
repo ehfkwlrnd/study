@@ -80,7 +80,7 @@
   box-shadow: 20px 10px 5px black; /*경계선 그림자 (x방향, y방향, 흐림정도, 색상)*/
   
   background-color: blue; /*배경색 변경*/
-  background-image: url('./img/img01.jpg'); /*배경 이미지 변경*/
+  background-image: url("./img/img01.jpg'); /*배경 이미지 변경*/
   background-attachment: fixed; /*배경 이미지를 화면에 고정*/
   background-repeat: no-repeat; /*배경 이미지 반복 없애기*/
   list-style: none; /*리스트 스타일 변경*/
