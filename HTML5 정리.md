@@ -1,5 +1,17 @@
 # HTML5 정리
 
+* 글자모양 태그
+
+  ```html
+  <i>기울어진 글자</i>
+  <sub>아래 첨자</sub>
+  <sup>위 첨자</sup>
+  <ins>밑줄 글자</ins>
+  <del>취소선</del>
+  ```
+
+
+
 * target 속성
 
   _blank, _self, _parent, _top
@@ -52,6 +64,13 @@
   <a href="http://www.naver.com" target="iframe1">iframe안에서 열기</a>
   ```
 
+
+
+
+* 시메틱 태그
+
+  header, nav, aside, section, article, footer
+
   
 
 * form 요소
@@ -59,7 +78,7 @@
   ```html
   <!--입력 양식은 항상 from으로 시작한다.-->
   <form action="input.jsp" method="post">
-      <!--action은 입력을 처리하는 서버 스크립트이다.-->
+      <!--action은 입력을 처리하는 서버 스크립트이다.(전송 위치)-->
       <!--method는 get과 post가 있다.-->
       <input type="text" name="input"/>
       <input type="submit">
@@ -150,11 +169,13 @@
         <!--min부터 max까지 step씩 디폴트는 value-->
     </form>
     ```
-    
+  
 * meta 속성
   
   ```html
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1"> /*모바일 */
+  
+  <!--모바일 버전 화면-->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
   ```
   

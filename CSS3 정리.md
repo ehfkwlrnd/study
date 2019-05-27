@@ -21,7 +21,6 @@
      .target {color: blue;} /*클래스 선택자*/
      ```
      
-
 * 의사 클래스
 
   ``` css
@@ -32,9 +31,9 @@
   :checked /*체크된 상태의 input 요소를 모두 선택*/
   
   
-  table:nth-child(1) /*첫 번재 요소*/
-  table:nth-child(2n) /*짝수번째 요소*/
-  table:nth-child(2n+1) /*홀수번째 요소*/
+  table:nth-child(1); /*첫 번재 요소*/
+  table:nth-child(2n); /*짝수번째 요소*/
+  table:nth-child(2n+1); /*홀수번째 요소*/
   ```
 
   
@@ -43,7 +42,7 @@
 
   ``` css
   h1[title] /*title 속성을 가지고 있는 h1요소를 선택*/
-  p[class="example"] /*class속성이 example인 p요소를 선택*/
+  input[type="text"] /*type속성이 text인 input요소를 선택*/
   ```
 
 
@@ -62,6 +61,11 @@
   font-weight: bold; /*볼드체 설정*/
   font-size: 10em; /*폰트의 크기*/
   font-style: italic; /*폰트 스타일 변경*/
+  font-family: /*글꼴 지정*/
+  <style> /*글꼴 임포트 예시*/
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+  p { font-family: 'Open Sans', sans-serif;}
+  </style>
   
   color: blue; /*텍스트 색상*/
   text-align: center /*텍스트 정렬*/
@@ -76,6 +80,9 @@
   box-shadow: 20px 10px 5px black; /*경계선 그림자 (x방향, y방향, 흐림정도, 색상)*/
   
   background-color: blue; /*배경색 변경*/
+  background-image: url('./img/img01.jpg'); /*배경 이미지 변경*/
+  background-attachment: fixed; /*배경 이미지를 화면에 고정*/
+  background-repeat: no-repeat; /*배경 이미지 반복 없애기*/
   list-style: none; /*리스트 스타일 변경*/
   margin: auto; /*자손들 가운데 정렬*/
   vertical-align: center; /*수직 정렬*/
@@ -83,7 +90,6 @@
   display: inline; /*인라인으로 변경*/
   display: hidden; /*화면에서 감춰짐*/
   display: none; /*없는 것으로 간주됨*/
-  
   ```
 * 요소 위치 정하기
 
@@ -92,6 +98,7 @@
   position: absolute; /*컨테이너의 원점이 기준*/
   position: relative; /*정상정인 위치가 기준*/
   position: fixed; /*윈도우의 원점이 기준*/
+  z-index: 1; /*숫자가 클 수록 앞에 위치*/
     
   #one {
       position: relative;
@@ -107,6 +114,23 @@
 
   ```css
   overflow: hidden; /*부모 영역을 벗어나면 보이지 않게 함*/
+  text-overflow: ellipsis; /*한 행을 넘어가면 ...으로 생략*/
+```
+  
+
+
+
+* 기타 효과
+
+  ```css
+  opacity: 0; /*투명도 : 0~1값으로 조정*/
+  visibility: hidden; /*가시성 : 기본값으로 visible을 가짐*/
+  transition: width 5s; /*전환 : (속성, 시간)*/
+  
+  transform: rotate(180deg); /*회전*/
+  transform: translate(10px, 10px); /*평행 이동(x, y)*/
+  transform: scale(2, 1.2); /*크기 변환(x, y)*/
+  transform: skew(20deg, 10deg); /*비틀기*/
   ```
 
   
