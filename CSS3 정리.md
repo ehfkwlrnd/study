@@ -80,7 +80,7 @@
   box-shadow: 20px 10px 5px black; /*경계선 그림자 (x방향, y방향, 흐림정도, 색상)*/
   
   background-color: blue; /*배경색 변경*/
-  background-image: url("./img/img01.jpg"); /*배경 이미지 변경*/
+  background-image: url('./img/img01.jpg'); /*배경 이미지 변경*/
   background-attachment: fixed; /*배경 이미지를 화면에 고정*/
   background-repeat: no-repeat; /*배경 이미지 반복 없애기*/
   list-style: none; /*리스트 스타일 변경*/
@@ -88,7 +88,7 @@
   vertical-align: center; /*수직 정렬*/
   
   display: inline; /*인라인으로 변경*/
-  display: hidden; /*화면에서 감춰짐*/
+  visibility: hidden; /*화면에서 감춰짐*/
   display: none; /*없는 것으로 간주됨*/
   ```
 * 요소 위치 정하기
@@ -115,8 +115,7 @@
   ```css
   overflow: hidden; /*부모 영역을 벗어나면 보이지 않게 함*/
   text-overflow: ellipsis; /*한 행을 넘어가면 ...으로 생략*/
-```
-  
+  ```
 
 
 
@@ -130,7 +129,7 @@
   transform: rotate(180deg); /*회전*/
   transform: translate(10px, 10px); /*평행 이동(x, y)*/
   transform: scale(2, 1.2); /*크기 변환(x, y)*/
-  transform: skew(20deg, 10deg); /*비틀기*/
+  transform: skew(20deg, 10deg); /*비틀기*/  
   ```
 
   
