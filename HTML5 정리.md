@@ -152,8 +152,13 @@
             주소 : <input type="password">
         </fieldset>
             
-        <input type="file" accept="image/jpg, image/gif">
-        <!--accept 속성을 통해 파일의 타입을 제한-->
+        <form method="post" enctype="multipart/form-data">
+            <!-- 파일 업로드 시에 form의 method는 반드시 post,
+    			 enctype은 multipart/form-data로 지정해야 함-->
+            <input type="file" accept="image/jpg, image/gif">
+        	<!--accept 속성을 통해 파일의 타입을 제한-->
+        </form>
+        
         
         <input type="email" name="email" required>
         <input type="url" name="url" required>

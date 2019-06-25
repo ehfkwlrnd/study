@@ -150,6 +150,8 @@
 
   ```javascript
   /*window.xxx*/
+  window.open(href, ?, feature); /*새 창 열기*/
+  window.open('http://www.naver.com', '네이버새창', 'width=640, height=480'); /*예시*/
   /*location 속성과 함수들*/
   location.href /*전체 URL 반환*/
   location.pathname /*URL중 경로를 반환*/
@@ -180,8 +182,8 @@
   window.onload = function(){ /*body태그 보다 위에 있어도 메모리에 load된 후 실행 되므로
   							 *접근에러가 생기지 않는다.*/
       //function contents
-  }
+}
   ```
-
+  
   
 

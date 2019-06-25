@@ -94,9 +94,27 @@
   dragstart, drag, dragenter, dragleave, dragover, drop
   <!--예시-->
   <img src="xxx" draggble="true" ondragstart="func1(event)">
-  <div id="cart" ondrop="func2(event, this)" ondragover="func3(event)">
+  <div id="cart" ondragover="func2(event)" ondrop="func3(event, this)" >
   </div>
   ```
+  
+  ```javascript
+  /*****사용예시******/
+  function func1(e){
+      e.dataTransfer.effectAllowed = 'move';
+  	e.dataTransfer.setData("Text", e.target.id);
+  }
+  function func2(e){
+      e.preventDefault();
+  }
+  function func3(e, d){
+      e.preventDefault();
+  	var src = e.dataTransfer.getData("Text");
+  	d.appendChild(document.getElementById(src));
+  }
+  ```
+  
+  
 
 
 
@@ -119,3 +137,89 @@
   ```
 
   
+
+* 구글맵 사용
+
+  ```html
+  <script src="https://maps.googleapis.com/maps/api/js?
+               key=YOUR_API_KEY&callback=initMap"
+      		 async defer></script>
+  <div id="map"></div>
+  <script>
+  var map, marker, cen;
+  function initMap() {
+      cen = {lat: -34.397, lng: 150.644}
+  	map = new google.maps.Map(document.getElementById('map'), {
+  		center: cen,
+  		zoom: 8
+  	});
+      marker = new google.maps.Marker({
+  		position: cen,
+  		map: map,
+  		label: "me"
+  	});
+  }
+  </script>
+  ```
+
+  
+
+* Worker
+
+  1. `worker.js` 와 `receive.js` 가 있다.
+
+  2. ```javascript
+     /*receive.js*/
+     w = new Worker('./js/worker.js'); /*worker.js의 메세지를 수신할 준비*/
+     ```
+
+  3. ```javascript
+     /*worker.js*/
+     postMessage(result);/*작업 이후 result를 송신*/
+     ```
+
+  4. ```javascript
+     /*receive.js*/
+     w.onmessage = function(event){
+         /*event.data를 통해 result핸들링*/
+     }
+     ```
+
+  ```javascript
+  /******사용예시******/
+  /*receive.js*/
+  var w;
+  function wstart(){
+  	w = new Worker("./js/worker.js");
+  	w.onmessage = function(event){
+  		$('#result').text(event.data);
+  	};
+  }
+  function wstop(){
+  	w.terminate();
+  }
+  /*worker.js*/
+  var i = 0;
+  function count(){
+  	i++;
+  	postMessage(i);
+  	setTimeout("count()", 1000);
+  }
+  count();
+  ```
+
+  
+
+* 웹 스토리지
+
+  ```javascript
+  /*스토리지 전역변수*/
+  localStorage 
+  sessionStorage 
+  
+  /******사용예시******/
+  if(!localStorage.count)
+  	localStorage.count = 0;
+  localStorage.count += 1;
+  ```
+
