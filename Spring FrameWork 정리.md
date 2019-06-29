@@ -39,7 +39,7 @@
   TV user2 = context.getBean("lg", TV.class);/*캐스팅 명시를 피할 수 있음*/
   ```
 
-  	4. Spring Bean Configuration 추가 정보
+  4. Spring Bean Configuration 추가 정보
 
   ```xml
   <bean id="lg" class="spring.tv.Lgtv"
@@ -214,7 +214,44 @@
   <aop:aspectj-autoproxy />
   ```
   
-  
+
+
+
+* applicationContext에서 Namespace이용하려면
+
+```xml
+<!--pom.xml-->
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-context</artifactId>
+	<version>4.3.14.RELEASE</version>
+</dependency>
+```
+
+
+
+* oracle DB에 접근하기 위한 기본적인 세팅
+
+```xml
+<!--pom.xml-->
+<repositories>
+    <!--oracle 드라이버를 maven repository에서 찾을 수 없으므로 직접 지정해줌-->
+	<repository>
+		<id>codelds</id>
+		<url>https://code.lds.org/nexus/content/groups/main-repo</url>
+	</repository>
+</repositories>
+
+<dependencies>
+	<dependency>
+		<groupId>com.oracle</groupId>
+		<artifactId>ojdbc6</artifactId>
+		<version>11.2.0.3</version>
+	</dependency>
+</dependencies>
+```
+
+
 
 * dao - spring 사용법
 
@@ -257,9 +294,406 @@
   <!--applicationContext.xml-->
   <bean id="template"
   	class="org.springframework.jdbc.core.JdbcTemplate">
-  	<constructor-arg ref="dataSource" />
+  	<constructor-arg ref="dataSource" /><!--bean에 올려둔 dataSource를 참조함-->
+  </bean>
+  ```
+  
+  
+  
+  3. Java에 template를 Autowired
+  
+  ```java
+  /*UserDAO_Spring.java*/
+  @Repository("spring")
+  public class UserDAO_Spring implements UserDAO{
+  	 @Autowired
+  	 private JdbcTemplate template;
+  	 /*dao contents...*/
+  }
+  ```
+  
+  
+  
+  5. RowMapper 클래스 구현
+  
+  ```java
+  /*UserRowMapper.java*/
+  class UserRowMapper implements RowMapper<UserVO>{
+  	@Override
+  	public UserVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+          UserVO user = new UserVO();
+          /*UserVO의 멤버변수는 id, pw뿐이라고 하자*/
+          user.setId(rs.getString("id"));
+          user.setPw(rs.getString("pw"));
+  		return user;
+  	}
+  }
+  ```
+  
+  
+  
+  4. SQL명령어 실행문 구현
+  
+  ```java
+  /*UserDAO_Spring.java*/
+  @Repository("spring")
+  public class UserDAO_Spring implements UserDAO{
+  	@Autowired
+  	private JdbcTemplate template;
+      
+      public UserVO getUser(String id){
+          String sql = "select * from userinfo where id=?";
+          UserVO user = null;
+          try{
+              user = template.queryForObject(sql,
+                                            new Object[] {id},
+                                            new UserRowMapper());
+          } catch(Exception e){}
+          return user;
+      }
+      
+  	public int addUser(UserVO vo){
+          String sql = "insert into userinfo (id, pw) values(?, ?)";
+          return template.update(sql, vo.getId(), vo.getPw());
+      }
+      
+      public List<UserVO> getUserList(){
+          String sql = "select * from userinfo";
+          return template.query(sql, new UserRowMapper());
+      }
+      
+      public int updateUser(UserVO vo){
+          String sql = "update userinfo set id=?, pw=?";
+          return template.update(sql, vo.getId(), vo.getPw());
+      }
+  }
+  ```
+  
+  
+  
+* dao - Mybatis 사용법 (beans)
+
+  1.  dataSource를 beans에 올린다. (Spring과 동일)
+
+  ```xml
+  <!--pom.xml-->
+  <!--spring을 사용할 때는 template 때문에 넣어줬지만 어쨋거나 mybatis에서도 필요하다-->
+  <dependency>
+  	<groupId>org.springframework</groupId>
+  	<artifactId>spring-jdbc</artifactId>
+  	<version>4.3.14.RELEASE</version>
+  </dependency>
+  ```
+
+  
+
+  2.  config.xml 파일을 생성한다.
+
+  ```xml
+  <!--mybatis_config.xml-->
+  <!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <configuration>
+      <typeAliases>
+      	<typeAlias type="spring.biz.user.vo.UserVO" alias="uservo"/>
+          <!--user_mapper.xml 에서 사용-->
+      </typeAliases>
+      
+      <mappers>
+      	<mapper resource="mapper/user_mapper.xml"/>
+          <!--user_mapper.xml 파일을 만들어 sql명령어를 처리-->
+      </mappers>
+  </configuration>
+  ```
+
+  
+
+  3.  mapper.xml 파일을 생성한다.
+
+  ```xml
+  <!--user_mapper.xml-->
+  <!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="user">
+      <select id="login" parameterType="uservo" resultType="uservo">
+          <!--uservo는 mybatis_config.xml에서 정의되어 있음-->
+      	select * from userinfo where id=#{id} and pw=#{pw}
+          <!--uservo의 멤버변수와 이름이 같으면 자동으로 get메소드가 파싱-->
+      </select>
+  	<select id="getuser" resultType="uservo">
+      	select * from userinfo where id=#{id}
+          <!--파싱할 변수가 하나일 경우에는 parameterType을 지정하지 않아도 됨-->
+      </select>
+      <insert id="adduser" parameterType="uservo">
+      	insert into userinfo(id, pw) values(#{id}, #{pw})
+      </insert>
+      <select id="list" resultType="uservo">
+      	select * from userinfo
+      </select>
+      <update id="update" parameterType="uservo">
+      	update userinfo set id=#{id}, pw=#{pw}
+      </update>
+  </mapper>
+  ```
+
+  
+
+  4.  sqlSessionFractoryBean와 sqlSession을 beans에 올린다.
+
+  ```xml
+  <!--pom.xml-->
+  <dependency>
+  	<groupId>org.mybatis</groupId>
+  	<artifactId>mybatis-spring</artifactId>
+  	<version>1.3.2</version>
+  </dependency>
+  ```
+
+  ```xml
+  <!--applicationContext.xml-->
+  <bean id="sqlSessionFactoryBean"
+        class="org.mybatis.spring.SqlSessionFactoryBean"
+        p:dataSource-ref="dataSource"
+        p:configLocation="classpath:/mybatis_config.xml"/>
+  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+  	<constructor-arg index="0" ref="sqlSessionFactoryBean"/>
   </bean>
   ```
 
   
+
+  6.  Java구현
+
+  ```xml
+  <!--pom.xml-->
+  <!--java에서 SqlSession클래스를 import하기 위함-->
+  <dependency>
+  	<groupId>org.mybatis</groupId>
+  	<artifactId>mybatis</artifactId>
+  	<version>3.4.6</version>
+  </dependency>
+  ```
+
+  ```java
+  /*DAO_Mybatis.java*/
+  @Repository("mybatis")
+  public class UserDAO_MyBatis implements UserDAO{
+  
+      @Autowired
+  	SqlSession sqlSession;
+      
+      public UserVO login(String id, String pw){
+          UserVO vo = new UserVO();
+          vo.setId(id);
+          vo.setPw(pw);
+          return sqlSession.selectOne("user.login", vo);
+      }
+      
+      public UserVO getUser(String id){
+          return sqlSession.selectOne("user.getuser", id);
+      }
+      
+      public int addUser(UserVO vo){
+          return sqlSession.insert("user.add", vo);
+      }
+     
+  	public List<UserVO> getUserList(){
+          return sqlSession.selectList("user.list");
+      }
+      
+      public int update(UserVO vo){
+          return sqlSession.update("user.update", vo);
+      }
+  }
+  ```
+
+  
+
+* ***dao - Mybatis 사용하기(annotation)***
+
+1. dataSource를 beans에 올린다.
+2. sqlSessionFactoryBean을 beans에 올린다.
+3. sqlSession을 beans에 올린다.
+
+```xml
+<!--pom.xml-->
+<repositories>
+	<repository>
+		<id>codelds</id>
+		<url>https://code.lds.org/nexus/content/groups/main-repo</url>
+	</repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+		<groupId>com.oracle</groupId>
+		<artifactId>ojdbc6</artifactId>
+		<version>11.2.0.3</version>
+	</dependency>
+    
+    <dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+		<version>3.4.6</version>
+	</dependency>
+    
+    <dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+		<version>1.3.2</version>
+	</dependency>
+    
+    <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+		<version>4.3.14.RELEASE</version>
+	</dependency>
+</dependencies>
+```
+
+
+
+```xml
+<!--applicationContext.xml-->
+<bean id="dataSource" 
+    class="org.apache.commons.dbcp.BasicDataSource"
+	p:driverClassName="oracle.jdbc.OracleDriver"
+	p:url="jdbc:oracle:thin:@127.0.0.1:1521:xe" p:username="scott"
+	p:password="TIGER" />
+
+<bean id="sqlSessionFactoryBean"
+	class="org.mybatis.spring.SqlSessionFactoryBean"
+	p:dataSource-ref="dataSource"
+	p:configLocation="classpath:/mybatis_config.xml" />
+
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	<constructor-arg index="0" ref="sqlSessionFactoryBean" />
+</bean>
+```
+
+
+
+4. config.xml 파일을 생성한다.
+
+```xml
+<!--mybatis_config.xml-->
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <mappers>
+    	<mapper class="mappers.UserMapper"/>
+        <!--UserMapper.java 파일을 만들어 sql명령어를 처리-->
+    </mappers>
+</configuration>
+```
+
+
+
+3. Mapper.java 파일을 생성한다.
+
+```java
+/*UserMapper.java*/
+public interface UserMapper{
+    @Select("select * from userinfo where id=#{id}")
+    UserVO getUser(String id);
+    
+    @Select("select * from userinfo where id='${id}' and pw='${pw}'")
+    /*map안의 key값 id, pw에 각각 접근한다.*/
+    /*ex) if map contains {"id", "abc"} then ${id} = abc*/
+    UserVO login(HashMap<String, String> map);
+    
+    @Select("select * from userinfo")
+    List<UserVO> getUserList();
+    
+    @Insert("insert into userinfo(id, pw) values(#{id}, #{pw})")
+    int addUser(UserVO vo);
+    
+    @Update("update userinfo set id=#{id}, pw=#{pw}")
+    int updateUser(UserVO vo);
+    
+    @Delete("delete from userinfo where id=#{id}")
+    int deleteUser(String id);
+    
+    /*sql쿼리문을 동적으로 생성하고 싶을 때 사용*/
+    /*type에는 자신이 작성한 java클래스명을 입력*/
+    /*method에는 해당 class에서 실행할 method명을 입력*/
+    /*type.method의 return 값이 sql문이 된다.*/
+    @SelectProvider(type = dynamic.DynamicSql.class, method = "dynamicSearch")
+    UserVO searchUser(@Param("id")String id, @Param("pw")String pw);
+    /*동적 sql생성 메소드에 parameter을 전달하고 싶을 때, map형태로 전달*/
+    /*@Param(key) value*/
+}
+```
+
+
+
+4. dao_Java 구현
+
+```java
+/*UserDAO_Mybatis.java*/
+public class UserDAO_Mybatis implements UserDAO{
+    
+    /*SqlSession을 바로 @Autowired하지 않는다.*/
+    private SqlSession sqlSession = null;
+	private UserMapper ui = null;
+	
+    /*set메소드에서 SqlSession에 접근하여 UserMapper객체까지 생성한다*/
+	@Autowired
+	public void setSqlSession(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+		ui = sqlSession.getMapper(UserMapper.class);
+	}
+    
+    public UserVO getUser(String id){
+        return ui.getUser(id);
+    }
+    
+    public UserVO login(String id, String pw) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", id);
+		map.put("pw", pw);
+		return ui.login(map);
+	}
+    
+    public List<UserVO> getUserList() {
+		return ui.getUserList();
+	}
+    
+    public int addUser(UserVO user) {
+		return ui.addUser(user); 
+	}
+    
+    public int updateUser(UserVO user) {
+		return ui.updateUser(user);
+	}
+    
+    public int deleteUser(String id) {
+		return ui.deleteeUser(id);
+	}
+    
+    public UserVO searchUser(String id, String pw){
+        return ui.searchUser(id, pw);
+    }
+    
+}
+```
+
+
+
+5. DynamicSql.java 구현
+
+```java
+public class DynamicSql {
+	public static String dynamicSearch(Map<String, Object> params) {
+		String sql = "";
+		String id = (String) params.get("id");
+		String pw = (String) params.get("pw");
+		sql = "select * from userinfo where id='"+id+"' and pw='"+pw+"'";
+		return sql;
+	}
+}
+```
 

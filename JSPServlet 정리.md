@@ -141,7 +141,7 @@
 
 * taglib
 
-  ```java
+  ```jsp
   /* https://mvnrepository.com/ 검색
    * jstl검색
    * jstl.jar ver1.2다운 */
@@ -156,3 +156,4 @@
   ```
 
   
+

@@ -86,6 +86,11 @@
 [imgex]: http://www.gstatic.com/webp/gallery/2.jpg
 
 ```text
+![imgname][linkname]
+[linkname]:linkAddress
+
+
+ex)
 ![testimg][imgex]
 ![testimg2][logo]
 [imgex]:http://www.gstatic.com/webp/gallery/2.jpg
