@@ -3,7 +3,7 @@
 * JQuery없이 사용예시
 
   ```javascript
-  req = new HMLHttpRequest();
+  req = new XMLHttpRequest();
   req.onreadystatechange = function(){
       if(req.readyState == 4 && req.status == 200){
           /*function content(req.responseText 핸들링)*/
